@@ -1,0 +1,82 @@
+# Recreated .gitignore
+
+# Explicit excludes requested by user
+/bin/
+/lib/
+/src/data/*
+ollama-linux-amd64.tgz
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+.python-version
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# mypy
+.mypy_cache/
+
+# flake8
+.flake8
+
+# pre-commit
+.pre-commit-config.yaml
+
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local data / caches
+.index_cache/
+.cache/
+.huggingface/
+
+# Model / ML framework caches
+transformers_cache/
+*.ckpt
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Secrets/env
+.env
+.env.*
+
+# Keep README tracked
+!README.md
+
