@@ -101,11 +101,6 @@ Troubleshooting
   - The Hugging Face model you specify is available or you have network access / valid HF token if using private models.
 - If persistence save/load fails, the helper will log errors and fall back to rebuilding the index.
 
-Contributing / Next steps
--------------------------
-- Add a GitHub Actions workflow to run tests and pre-commit on push (I can add this for you).
-- Pin runtime dependencies in a `requirements.txt` or `pyproject.toml` if you want reproducible installs.
-
 License
 -------
 This example repo contains no license file; add one if you plan to publish or share widely.
