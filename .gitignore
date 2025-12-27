@@ -3,7 +3,7 @@
 # Explicit excludes requested by user
 /bin/
 /lib/
-/src/data/*
+/data/*
 ollama-linux-amd64.tgz
 
 # Python cache and compiled files

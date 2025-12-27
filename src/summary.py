@@ -44,7 +44,7 @@ async def main(query: str, verbose: bool, dry_run: bool, embed_model_name: str, 
     log = logging.getLogger(__name__)
 
     # locate data directory relative to this script
-    base_dir = Path(__file__).resolve().parent
+    base_dir = Path(__file__).resolve().parent.parent
     data_dir = base_dir / "data"
 
     reader = SimpleDirectoryReader(str(data_dir))

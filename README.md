@@ -20,6 +20,9 @@ Create and activate a virtual environment, then install development dependencies
 python3 -m venv venv
 . venv/bin/activate
 pip install -r requirements-dev.txt
+curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64.tgz
+tar -xvzf ollama-linux-amd64.tgz
+wget https://raw.githubusercontent.com/run-llama/llama_index/main/docs/examples/data/paul_graham/paul_graham_essay.txt -O data/paul_graham_essay.txt
 ```
 
 If you plan to run the example in non-dry-run mode you will also need the runtime dependencies required by `llama_index`, `transformers`, and your embedding/LLM backends; install those as appropriate.
