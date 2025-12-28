@@ -1,14 +1,12 @@
 import sys
-import asyncio
+import asyncio  # noqa: E402
 import pathlib
-
-import pytest
 
 HERE = pathlib.Path(__file__).resolve().parents[1]
 SRC = HERE / "src"
 sys.path.insert(0, str(SRC))
 
-import summary
+import summary  # noqa: E402
 
 
 class FakeReader:
@@ -59,7 +57,18 @@ def test_cli_build_and_query(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(summary.Settings, "_embed_model", FakeEmbedder(), raising=False)
     monkeypatch.setattr(summary.Settings, "_llm", FakeLLM(), raising=False)
 
-    asyncio.run(summary.main("Summarize", verbose=True, dry_run=False, embed_model_name="x", llm_model_name="y", cache_dir=str(tmp_path / "cache"), use_cache=False, rebuild=False))
+    asyncio.run(
+        summary.main(
+            "Summarize",
+            verbose=True,
+            dry_run=False,
+            embed_model_name="x",
+            llm_model_name="y",
+            cache_dir=str(tmp_path / "cache"),
+            use_cache=False,
+            rebuild=False,
+        )
+    )
 
     out = capsys.readouterr().out
     assert "FAKE_SUMMARY" in out or out.strip() != ""

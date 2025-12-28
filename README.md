@@ -11,10 +11,13 @@ Requirements
 ------------
 - Python 3.10+ (3.11 recommended)
 - A working Python environment with required packages. Runtime dependencies vary with your configuration (Ollama, HuggingFace, etc.).
+- (Ollama)[https://ollama.com/] installed and see https://developers.llamaindex.ai/python/framework/getting_started/starter_example_local/
+- (HuggingFace)[https://huggingface.co/] account and token if you plan to use private models.
+- Tested on Linux Bazzite OS with Nvidia RTX 40?? GPU 8GB VRAM, Intel Core 7 32GB RAM.
 
 Developer setup
 ---------------
-Create and activate a virtual environment, then install development dependencies:
+Create and activate a virtual environment, then install development dependencies. This example is for Linux; adapt as needed for Windows or MacOS.:
 
 ```sh
 python3 -m venv venv
@@ -104,4 +107,3 @@ Troubleshooting
 License
 -------
 This example repo contains no license file; add one if you plan to publish or share widely.
-

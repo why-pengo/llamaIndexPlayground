@@ -1,16 +1,13 @@
 import sys
-import asyncio
+import asyncio  # noqa: E402
 import pathlib
-import pickle
-
-import pytest
 
 HERE = pathlib.Path(__file__).resolve().parents[1]
 SRC = HERE / "src"
 sys.path.insert(0, str(SRC))
 
-import persistence
-import summary
+import persistence  # noqa: E402
+import summary  # noqa: E402
 
 
 class FakeIndex:
@@ -50,5 +47,15 @@ def test_pickle_cache_roundtrip(tmp_path, monkeypatch):
             return [Doc()]
 
     monkeypatch.setattr(summary, "SimpleDirectoryReader", FakeReader)
-    asyncio.run(summary.main("Q", verbose=False, dry_run=True, embed_model_name="x", llm_model_name="y", cache_dir=str(cache_dir), use_cache=True, rebuild=False))
-
+    asyncio.run(
+        summary.main(
+            "Q",
+            verbose=False,
+            dry_run=True,
+            embed_model_name="x",
+            llm_model_name="y",
+            cache_dir=str(cache_dir),
+            use_cache=True,
+            rebuild=False,
+        )
+    )

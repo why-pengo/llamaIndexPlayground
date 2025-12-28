@@ -1,15 +1,13 @@
 import sys
-import asyncio
+import asyncio  # noqa: E402
 import pathlib
-
-import pytest
 
 # ensure src is importable
 HERE = pathlib.Path(__file__).resolve().parents[1]
 SRC = HERE / "src"
 sys.path.insert(0, str(SRC))
 
-import summary
+import summary  # noqa: E402
 
 
 class FakeReader:
@@ -29,12 +27,29 @@ def test_dry_run_no_models(monkeypatch, capsys):
     monkeypatch.setattr(summary, "SimpleDirectoryReader", FakeReader)
 
     # Prevent model initialization if accidentally reached
-    monkeypatch.setattr(summary, "HuggingFaceEmbedding", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("Should not init embedder")), raising=False)
-    monkeypatch.setattr(summary, "Ollama", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("Should not init LLM")), raising=False)
+    monkeypatch.setattr(
+        summary,
+        "HuggingFaceEmbedding",
+        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("Should not init embedder")),
+        raising=False,
+    )
+    monkeypatch.setattr(
+        summary, "Ollama", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("Should not init LLM")), raising=False
+    )
 
-    asyncio.run(summary.main("What is this?", verbose=False, dry_run=True, embed_model_name="x", llm_model_name="y", cache_dir=".tmp_cache", use_cache=False, rebuild=False))
+    asyncio.run(
+        summary.main(
+            "What is this?",
+            verbose=False,
+            dry_run=True,
+            embed_model_name="x",
+            llm_model_name="y",
+            cache_dir=".tmp_cache",
+            use_cache=False,
+            rebuild=False,
+        )
+    )
 
     out = capsys.readouterr().out
     assert "First document snippet" in out
     assert "Document count: 1" in out
-
