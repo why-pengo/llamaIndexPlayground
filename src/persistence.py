@@ -5,13 +5,14 @@ This module attempts to use llama_index's native persistence APIs when available
 (StorageContext + load_index_from_storage, or index.save_to_disk / load_from_disk).
 If those aren't available it falls back to a best-effort pickle-based cache.
 """
+
 import logging
 import os
 import pickle
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 log = logging.getLogger(__name__)
 
@@ -21,8 +22,8 @@ HAS_LOAD_FROM_STORAGE = False
 HAS_INDEX_SAVE = False
 HAS_INDEX_LOAD = False
 
-_storage_module = None
-_load_index_from_storage = None
+_storage_module: Optional[Any] = None
+_load_index_from_storage: Optional[Callable[[Any], Any]] = None
 
 try:
     # try common modern locations
@@ -32,6 +33,7 @@ try:
         from llama_index.storage.storage_context import StorageContext  # type: ignore
     try:
         from llama_index import load_index_from_storage  # type: ignore
+
         _load_index_from_storage = load_index_from_storage
         HAS_LOAD_FROM_STORAGE = True
     except Exception:
@@ -45,6 +47,7 @@ except Exception:
 # Detect older index save/load methods on VectorStoreIndex
 try:
     import llama_index as _ll
+
     if hasattr(_ll, "VectorStoreIndex"):
         v = getattr(_ll, "VectorStoreIndex")
         HAS_INDEX_SAVE = hasattr(v, "save_to_disk") or hasattr(v, "save")
@@ -73,8 +76,12 @@ def load_index(cache_dir: str) -> Optional[Any]:
     if HAS_STORAGE and HAS_LOAD_FROM_STORAGE:
         try:
             log.info("Loading index via llama_index StorageContext from %s", cache_dir)
+            # mypy: ensure `_storage_module` is not None when HAS_STORAGE is True
+            assert _storage_module is not None
             StorageContext = _storage_module
             sc = StorageContext.from_defaults(persist_dir=str(cache_path))
+            # mypy: ensure `_load_index_from_storage` is not None when HAS_LOAD_FROM_STORAGE is True
+            assert _load_index_from_storage is not None
             return _load_index_from_storage(sc)
         except Exception:
             log.exception("Failed to load index via StorageContext; falling back")
@@ -82,6 +89,7 @@ def load_index(cache_dir: str) -> Optional[Any]:
     if HAS_INDEX_LOAD:
         try:
             import llama_index as _ll
+
             v = getattr(_ll, "VectorStoreIndex")
             if hasattr(v, "load_from_disk"):
                 log.info("Loading index via VectorStoreIndex.load_from_disk from %s", cache_dir)
@@ -110,6 +118,8 @@ def save_index(index: Any, cache_dir: str) -> bool:
     if HAS_STORAGE:
         try:
             log.info("Saving index via llama_index StorageContext into %s", cache_dir)
+            # mypy: ensure `_storage_module` is not None when HAS_STORAGE is True
+            assert _storage_module is not None
             StorageContext = _storage_module
             tmp_dir = Path(tempfile.mkdtemp(dir=str(cache_path)))
             if hasattr(index, "save_to_disk"):
@@ -131,8 +141,9 @@ def save_index(index: Any, cache_dir: str) -> bool:
 
     if HAS_INDEX_SAVE:
         try:
-            import llama_index as _ll
-            v = getattr(_ll, "VectorStoreIndex")
+            # avoid importing llama_index here — not required for using instance methods
+
+            # don't need to fetch VectorStoreIndex here — we operate on the instance
             tmp_dir = Path(tempfile.mkdtemp(dir=str(cache_path)))
             if hasattr(index, "save_to_disk"):
                 index.save_to_disk(str(tmp_dir))
@@ -157,4 +168,3 @@ def save_index(index: Any, cache_dir: str) -> bool:
     except Exception:
         log.exception("Failed to pickle index into %s", cache_path)
     return False
-

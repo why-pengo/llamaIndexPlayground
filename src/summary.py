@@ -16,15 +16,25 @@ _SAVE_INDEX = None
 try:
     from tqdm import tqdm
 except Exception:  # pragma: no cover - optional
+
     def tqdm(x, **kwargs):
         return x
 
 
 def parse_args():
     p = argparse.ArgumentParser(description="Query the Paul Graham essay using Ollama + HuggingFace embeddings")
-    p.add_argument("--query", "-q", default="What is this document about?", help="The natural language query to run against the document index")
+    p.add_argument(
+        "--query",
+        "-q",
+        default="What is this document about?",
+        help="The natural language query to run against the document index",
+    )
     p.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
-    p.add_argument("--dry-run", action="store_true", help="Do a local dry run (load documents only) without contacting Ollama or HuggingFace")
+    p.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Do a local dry run (load documents only) without contacting Ollama or HuggingFace",
+    )
 
     # Model and cache options
     p.add_argument("--embed-model", default="BAAI/bge-base-en-v1.5", help="HuggingFace embedding model name")
@@ -35,7 +45,16 @@ def parse_args():
     return p.parse_args()
 
 
-async def main(query: str, verbose: bool, dry_run: bool, embed_model_name: str, llm_model_name: str, cache_dir: str, use_cache: bool, rebuild: bool):
+async def main(
+    query: str,
+    verbose: bool,
+    dry_run: bool,
+    embed_model_name: str,
+    llm_model_name: str,
+    cache_dir: str,
+    use_cache: bool,
+    rebuild: bool,
+):
     """Main entrypoint (async) — signature kept for tests.
 
     Args match tests that call: asyncio.run(summary.main(...))
@@ -77,7 +96,7 @@ async def main(query: str, verbose: bool, dry_run: bool, embed_model_name: str, 
             print("Cached index found at:", cache_path)
             print("Cached index type:", type(index))
             # doc count may not be exposed; print placeholder
-            print("Document count (may be approximate):", getattr(index, 'docstore', 'unknown'))
+            print("Document count (may be approximate):", getattr(index, "docstore", "unknown"))
         elif documents:
             snippet = getattr(documents[0], "get_content", lambda: str(documents[0]))()
             print("First document snippet:\n", snippet[:500])
@@ -138,4 +157,15 @@ async def main(query: str, verbose: bool, dry_run: bool, embed_model_name: str, 
 
 if __name__ == "__main__":
     args = parse_args()
-    asyncio.run(main(args.query, args.verbose, args.dry_run, args.embed_model, args.llm_model, args.cache_dir, args.use_cache, args.rebuild))
+    asyncio.run(
+        main(
+            args.query,
+            args.verbose,
+            args.dry_run,
+            args.embed_model,
+            args.llm_model,
+            args.cache_dir,
+            args.use_cache,
+            args.rebuild,
+        )
+    )
