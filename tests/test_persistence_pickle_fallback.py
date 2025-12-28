@@ -1,13 +1,7 @@
-import sys
-import asyncio  # noqa: E402
-import pathlib
+import asyncio
 
-HERE = pathlib.Path(__file__).resolve().parents[1]
-SRC = HERE / "src"
-sys.path.insert(0, str(SRC))
-
-import persistence  # noqa: E402
-import summary  # noqa: E402
+import persistence
+import summary
 
 
 class FakeIndex:
